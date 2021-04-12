@@ -1,0 +1,179 @@
+{
+  "rules": [
+    {
+      "conditions": [
+        "rare",
+        "terrible"
+      ],
+      "conclusion": "terrible"
+    },
+    {
+      "conditions": [
+        "rare",
+        "bad"
+      ],
+      "conclusion": "terrible"
+    },
+    {
+      "conditions": [
+        "rare",
+        "average"
+      ],
+      "conclusion": "poor"
+    },
+    {
+      "conditions": [
+        "rare",
+        "good"
+      ],
+      "conclusion": "mediocre"
+    },
+    {
+      "conditions": [
+        "rare",
+        "excellent"
+      ],
+      "conclusion": "mediocre"
+    },
+    {
+      "conditions": [
+        "inconsistent",
+        "terrible"
+      ],
+      "conclusion": "terrible"
+    },
+    {
+      "conditions": [
+        "inconsistent",
+        "bad"
+      ],
+      "conclusion": "poor"
+    },
+    {
+      "conditions": [
+        "inconsistent",
+        "average"
+      ],
+      "conclusion": "poor"
+    },
+    {
+      "conditions": [
+        "inconsistent",
+        "good"
+      ],
+      "conclusion": "mediocre"
+    },
+    {
+      "conditions": [
+        "inconsistent",
+        "excellent"
+      ],
+      "conclusion": "normal"
+    },
+    {
+      "conditions": [
+        "usual",
+        "terrible"
+      ],
+      "conclusion": "terrible"
+    },
+    {
+      "conditions": [
+        "usual",
+        "bad"
+      ],
+      "conclusion": "poor"
+    },
+    {
+      "conditions": [
+        "usual",
+        "average"
+      ],
+      "conclusion": "mediocre"
+    },
+    {
+      "conditions": [
+        "usual",
+        "good"
+      ],
+      "conclusion": "mediocre"
+    },
+    {
+      "conditions": [
+        "usual",
+        "excellent"
+      ],
+      "conclusion": "normal"
+    },
+    {
+      "conditions": [
+        "regular",
+        "terrible"
+      ],
+      "conclusion": "poor"
+    },
+    {
+      "conditions": [
+        "regular",
+        "bad"
+      ],
+      "conclusion": "mediocre"
+    },
+    {
+      "conditions": [
+        "regular",
+        "average"
+      ],
+      "conclusion": "normal"
+    },
+    {
+      "conditions": [
+        "regular",
+        "good"
+      ],
+      "conclusion": "normal"
+    },
+    {
+      "conditions": [
+        "regular",
+        "excellent"
+      ],
+      "conclusion": "excellent"
+    },
+    {
+      "conditions": [
+        "constant",
+        "terrible"
+      ],
+      "conclusion": "poor"
+    },
+    {
+      "conditions": [
+        "constant",
+        "bad"
+      ],
+      "conclusion": "mediocre"
+    },
+    {
+      "conditions": [
+        "constant",
+        "average"
+      ],
+      "conclusion": "normal"
+    },
+    {
+      "conditions": [
+        "constant",
+        "good"
+      ],
+      "conclusion": "excellent"
+    },
+    {
+      "conditions": [
+        "constant",
+        "excellent"
+      ],
+      "conclusion": "excellent"
+    }
+  ]
+}
