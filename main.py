@@ -273,13 +273,13 @@ def mamdani(_input_attendance, _input_grades):
 
 
 def sugeno(_input_attendance, _input_grades):
-    print('> Commencing Sugeno evaluation method...')
+    # print('> Commencing Sugeno evaluation method...')
 
     memberships = input_evaluation(_input_attendance, _input_grades)
     _w = list(map(lambda x: x['result'], memberships))
     _y = []
 
-    print('Checking already accumulated Rules from JSON...')
+    # print('Checking already accumulated Rules from JSON...')
     rules = get_rules_data()
 
     for i, rule in enumerate(memberships):
@@ -287,8 +287,8 @@ def sugeno(_input_attendance, _input_grades):
             item for item in rules if
             item["conditions"] == [rule['first_term'], rule['second_term']])
 
-        print('Deffuzificating Rule {0}: {1} with X={2} Y={3}'.format(i + 1, power_rule['conclusion_sugeno'],
-                                                                      _input_attendance, _input_grades))
+        # print('Deffuzificating Rule {0}: {1} with X={2} Y={3}'.format(i + 1, power_rule['conclusion_sugeno'],
+        #                                                               _input_attendance, _input_grades))
 
         _y.append(execute_function(power_rule['conclusion_sugeno'], _input_attendance, _input_grades))
 
@@ -296,9 +296,9 @@ def sugeno(_input_attendance, _input_grades):
     for i in range(len(_w)):
         result.append(round((_w[i] * _y[i]), 2))
 
-    print(
-        '> Further defuzzification according to accumulated Rules confirms next results: \n{0}'.format(
-            result))
+    # print(
+    #     '> Further defuzzification according to accumulated Rules confirms next results: \n{0}'.format(
+    #         result))
 
     result = sum(result) / sum(_w)
     return round(result, 2)
@@ -382,40 +382,49 @@ def build_semantic_graphs():
 
 
 def build_3d_graph():
-    _points = [[], [], []]
+    _points = [[], [], [], []]
 
     for x in range(100):
         for y in range(100):
             _points[0].append(x)
             _points[1].append(y)
             _points[2].append(mamdani(x, y))
+            _points[3].append(sugeno(x, y))
 
-    ax = plt.axes(projection='3d')
-    ax.scatter(_points[0], _points[1], _points[2], c=_points[2], cmap='viridis', linewidth=0.5);
+    ax2 = plt.axes(projection='3d')
+    ax2.plot_trisurf(_points[0], _points[1], _points[3], cmap='viridis', linewidth=0.5);
 
-    ax.set_title("Fuzzy Performance Interference Graph")
-    ax.set_xlabel("Attendance")
-    ax.set_ylabel("Grades")
-    ax.set_zlabel("Performance")
-
+    ax2.set_title("Fuzzy Interference Graph Sugeno")
+    ax2.set_xlabel("Attendance")
+    ax2.set_ylabel("Grades")
+    ax2.set_zlabel("Performance")
     plt.show()
+
+    # ax1 = plt.axes(projection='3d')
+    # ax1.plot_trisurf(_points[0], _points[1], _points[2], cmap='viridis', linewidth=0.5);
+    #
+    # ax1.set_title("Fuzzy Interference Graph Mamdani")
+    # ax1.set_xlabel("Attendance")
+    # ax1.set_ylabel("Grades")
+    # ax1.set_zlabel("Performance")
+    # plt.show()
 
 
 if __name__ == '__main__':
     build_3d_graph()
 
-    # print('Enter attendance score (0-100):')
-    # input_attendance = input()
-    # # input_attendance = 20
-    #
-    # print('Enter grades score (0-100):')
-    # input_grades = input()
-    # # input_grades = 15
-    #
-    # result_mamdani = mamdani(float(input_attendance), float(input_grades))
-    # result_sugeno = sugeno(float(input_attendance), float(input_grades))
-    #
-    # print(
-    #     '\nResults of Fuzzy Interference Systems:\n> According to Mamdani: {0}\n> According to Sugeno: {1}\nfrom '
-    #     'Inputs: ({2}, {3})'.format(
-    #         result_mamdani, result_sugeno, float(input_attendance), float(input_grades)))
+    print('Enter attendance score (0-100):')
+    input_attendance = input()
+    # input_attendance = 20
+
+    print('Enter grades score (0-100):')
+    input_grades = input()
+    # input_grades = 15
+
+    result_mamdani = mamdani(float(input_attendance), float(input_grades))
+    result_sugeno = sugeno(float(input_attendance), float(input_grades))
+
+    print(
+        '\nResults of Fuzzy Interference Systems:\n> According to Mamdani: {0}\n> According to Sugeno: {1}\nfrom '
+        'Inputs: ({2}, {3})'.format(
+            result_mamdani, result_sugeno, float(input_attendance), float(input_grades)))
