@@ -3,7 +3,7 @@ import json
 from matplotlib import pyplot as plt
 
 
-def get_data():
+def get_rules_data():
     _rules = []
 
     with open('config.json') as json_file:
@@ -12,7 +12,8 @@ def get_data():
         for rule in data['rules']:
             _rules.append({
                 'conditions': rule['conditions'],
-                'conclusion': rule['conclusion']
+                'conclusion_mamdani': rule['conclusion_mamdani'],
+                'conclusion_sugeno': rule['conclusion_sugeno']
             })
 
     return _rules
@@ -158,7 +159,7 @@ def performance_membership(x_value):
 
 
 def crisp_performance(term, score):
-    print('Started calculating Crisp Value for inserted data...')
+    # print('Started calculating Crisp Value for inserted data...')
     if term == 'terrible':
         result = 20 - (20 * score)
         return result
@@ -185,6 +186,122 @@ def crisp_conclusion(score):
     print('Crisp Score: {0}'.format(score))
     for i, conclusion in enumerate(result):
         print('Crisp Term #{0}: {1} with {2} accuracy'.format(i + 1, conclusion['term'], conclusion['membership']))
+
+    return round(score, 2)
+
+
+def input_evaluation(_input_attendance, _input_grades):
+    a_membership = attendance_membership(_input_attendance)
+    g_membership = grades_membership(_input_grades)
+    # print('> Membership for input values are: \n{0}\n{1}'.format(a_membership, g_membership))
+
+    all_memberships = a_membership + g_membership
+
+    # print('> After assumption evaluation {0} MF(s) remain: \n{1}'.format(len(all_memberships), all_memberships))
+
+    results = []
+    if len(a_membership) == 2:
+        if len(g_membership) == 2:
+            # print('Creating 4 new Rules from 4 MFs...')
+            results.append({'result': min(a_membership[0]['membership'], g_membership[0]['membership']),
+                            'first_term': a_membership[0]['term'],
+                            'second_term': g_membership[0]['term']})
+            results.append({'result': min(a_membership[0]['membership'], g_membership[1]['membership']),
+                            'first_term': a_membership[0]['term'],
+                            'second_term': g_membership[1]['term']})
+            results.append({'result': min(a_membership[1]['membership'], g_membership[0]['membership']),
+                            'first_term': a_membership[1]['term'],
+                            'second_term': g_membership[0]['term']})
+            results.append({'result': min(a_membership[1]['membership'], g_membership[1]['membership']),
+                            'first_term': a_membership[1]['term'],
+                            'second_term': g_membership[1]['term']})
+        elif len(g_membership) == 1:
+            # print('Creating 2 new Rules from 3 MFs...')
+            results.append({'result': min(a_membership[0]['membership'], g_membership[0]['membership']),
+                            'first_term': a_membership[0]['term'],
+                            'second_term': g_membership[0]['term']})
+            results.append({'result': min(a_membership[1]['membership'], g_membership[0]['membership']),
+                            'first_term': a_membership[1]['term'],
+                            'second_term': g_membership[0]['term']})
+    elif len(a_membership) == 1:
+        if len(g_membership) == 2:
+            # print('Creating 2 new Rules from 3 MFs...')
+            results.append({'result': min(a_membership[0]['membership'], g_membership[0]['membership']),
+                            'first_term': a_membership[0]['term'],
+                            'second_term': g_membership[0]['term']})
+            results.append({'result': min(a_membership[0]['membership'], g_membership[1]['membership']),
+                            'first_term': a_membership[0]['term'],
+                            'second_term': g_membership[1]['term']})
+        elif len(g_membership) == 1:
+            # print('Creating 1 new Rules from 2 MFs...')
+            results.append({'result': min(a_membership[0]['membership'], g_membership[0]['membership']),
+                            'first_term': a_membership[0]['term'],
+                            'second_term': g_membership[0]['term']})
+
+    # print('> After defuzzification {0} Rules remain: \n{1}'.format(len(results), results))
+    return results
+
+
+def execute_function(expression, x, y):
+    return eval(expression)
+
+
+def mamdani(_input_attendance, _input_grades):
+    # print('> Commencing Mamdani evaluation method...')
+
+    memberships = input_evaluation(_input_attendance, _input_grades)
+    result = max(list(map(lambda x: x['result'], memberships)))
+
+    resulting_rule = next(item for item in memberships if item["result"] == result)
+    # print(
+    #     '> Further defuzzification according to new Rules confirms next Rule most powerful: \n{0}'.format(
+    #         resulting_rule))
+    # print('Checking already accumulated Rules from JSON...')
+    rules = get_rules_data()
+
+    power_rule = next(
+        item for item in rules if item["conditions"] == [resulting_rule['first_term'], resulting_rule['second_term']])
+
+    # print(
+    #     '> Found Accumulated Rule(s) matching requested parameters: \nInitial Rule: {0}\nAccumulated Rule: {1}'.format(
+    #         resulting_rule, power_rule))
+    # print('> Calculations resulted PERFORMANCE term "{0}" with {1} evaluation score. '.format(
+    #     power_rule['conclusion_mamdani'],
+    #     resulting_rule['result']))
+
+    return crisp_performance(power_rule['conclusion_mamdani'], resulting_rule['result'])
+
+
+def sugeno(_input_attendance, _input_grades):
+    print('> Commencing Sugeno evaluation method...')
+
+    memberships = input_evaluation(_input_attendance, _input_grades)
+    _w = list(map(lambda x: x['result'], memberships))
+    _y = []
+
+    print('Checking already accumulated Rules from JSON...')
+    rules = get_rules_data()
+
+    for i, rule in enumerate(memberships):
+        power_rule = next(
+            item for item in rules if
+            item["conditions"] == [rule['first_term'], rule['second_term']])
+
+        print('Deffuzificating Rule {0}: {1} with X={2} Y={3}'.format(i + 1, power_rule['conclusion_sugeno'],
+                                                                      _input_attendance, _input_grades))
+
+        _y.append(execute_function(power_rule['conclusion_sugeno'], _input_attendance, _input_grades))
+
+    result = []
+    for i in range(len(_w)):
+        result.append(round((_w[i] * _y[i]), 2))
+
+    print(
+        '> Further defuzzification according to accumulated Rules confirms next results: \n{0}'.format(
+            result))
+
+    result = sum(result) / sum(_w)
+    return round(result, 2)
 
 
 def build_semantic_graphs():
@@ -260,92 +377,45 @@ def build_semantic_graphs():
     ax1.legend(["Rare", "Inconsistent", "Usual", "Regular", "Constant"])
     ax2.legend(["Terrible", "Bad", "Average", "Good", "Excellent"])
     ax3.legend(["Terrible", "Poor", "Mediocre", "Normal", "Excellent"])
-    return fig
+
+    plt.show()
 
 
-def input_evaluation_mamdani(_input_attendance, _input_grades):
-    a_membership = attendance_membership(_input_attendance)
-    g_membership = grades_membership(_input_grades)
-    print('> Membership for input values are: \n{0}\n{1}'.format(a_membership, g_membership))
+def build_3d_graph():
+    _points = [[], [], []]
 
-    all_memberships = a_membership + g_membership
+    for x in range(100):
+        for y in range(100):
+            _points[0].append(x)
+            _points[1].append(y)
+            _points[2].append(mamdani(x, y))
 
-    print('> After assumption evaluation {0} MF(s) remain: \n{1}'.format(len(all_memberships), all_memberships))
+    ax = plt.axes(projection='3d')
+    ax.scatter(_points[0], _points[1], _points[2], c=_points[2], cmap='viridis', linewidth=0.5);
 
-    results = []
-    if len(a_membership) == 2:
-        if len(g_membership) == 2:
-            print('Creating 4 new Rules from 4 MFs...')
-            results.append({'result': min(a_membership[0]['membership'], g_membership[0]['membership']),
-                            'first_term': a_membership[0]['term'],
-                            'second_term': g_membership[0]['term']})
-            results.append({'result': min(a_membership[0]['membership'], g_membership[1]['membership']),
-                            'first_term': a_membership[0]['term'],
-                            'second_term': g_membership[1]['term']})
-            results.append({'result': min(a_membership[1]['membership'], g_membership[0]['membership']),
-                            'first_term': a_membership[1]['term'],
-                            'second_term': g_membership[0]['term']})
-            results.append({'result': min(a_membership[1]['membership'], g_membership[1]['membership']),
-                            'first_term': a_membership[1]['term'],
-                            'second_term': g_membership[1]['term']})
-        elif len(g_membership) == 1:
-            print('Creating 2 new Rules from 3 MFs...')
-            results.append({'result': min(a_membership[0]['membership'], g_membership[0]['membership']),
-                            'first_term': a_membership[0]['term'],
-                            'second_term': g_membership[0]['term']})
-            results.append({'result': min(a_membership[1]['membership'], g_membership[0]['membership']),
-                            'first_term': a_membership[1]['term'],
-                            'second_term': g_membership[0]['term']})
-    elif len(a_membership) == 1:
-        if len(g_membership) == 2:
-            print('Creating 2 new Rules from 3 MFs...')
-            results.append({'result': min(a_membership[0]['membership'], g_membership[0]['membership']),
-                            'first_term': a_membership[0]['term'],
-                            'second_term': g_membership[0]['term']})
-            results.append({'result': min(a_membership[0]['membership'], g_membership[1]['membership']),
-                            'first_term': a_membership[0]['term'],
-                            'second_term': g_membership[1]['term']})
-        elif len(g_membership) == 1:
-            print('Creating 1 new Rules from 2 MFs...')
-            results.append({'result': min(a_membership[0]['membership'], g_membership[0]['membership']),
-                            'first_term': a_membership[0]['term'],
-                            'second_term': g_membership[0]['term']})
+    ax.set_title("Fuzzy Performance Interference Graph")
+    ax.set_xlabel("Attendance")
+    ax.set_ylabel("Grades")
+    ax.set_zlabel("Performance")
 
-    print('> After defuzzification {0} Rules remain: \n{1}'.format(len(results), results))
-    result = max(list(map(lambda x: x['result'], results)))
-
-    resulting_rule = next(item for item in results if item["result"] == result)
-    print(
-        '> Further defuzzification according to new Rules confirms next Rule most powerful: \n{0}'.format(
-            resulting_rule))
-    # print(performance_membership(resulting_rule['result'] * 100))
-    print('Checking already accumulated Rules from JSON...')
-    rules = get_data()
-    power_rule = next(
-        item for item in rules if item["conditions"] == [resulting_rule['first_term'], resulting_rule['second_term']])
-
-    print(
-        '> Found Accumulated Rule(s) matching requested parameters: \nInitial Rule: {0}\nAccumulated Rule: {1}'.format(
-            resulting_rule, power_rule))
-    print('> Calculations resulted PERFORMANCE term "{0}" with {1} evaluation score. '.format(power_rule['conclusion'],
-                                                                                              resulting_rule['result']))
-
-    return power_rule['conclusion'], resulting_rule['result']
-
-
-def input_evaluation_sugeno(_input_attendance, _input_grades):
-    pass
+    plt.show()
 
 
 if __name__ == '__main__':
-    plt = build_semantic_graphs()
-    plt.show()
+    build_3d_graph()
 
-    print('Enter attendance score (0-100):')
-    input_attendance = input()
-
-    print('Enter grades score (0-100):')
-    input_grades = input()
-
-    conclusion_term, evaluated_score = input_evaluation_mamdani(float(input_attendance), float(input_grades))
-    crisp_conclusion(crisp_performance(conclusion_term, evaluated_score))
+    # print('Enter attendance score (0-100):')
+    # input_attendance = input()
+    # # input_attendance = 20
+    #
+    # print('Enter grades score (0-100):')
+    # input_grades = input()
+    # # input_grades = 15
+    #
+    # result_mamdani = mamdani(float(input_attendance), float(input_grades))
+    # result_sugeno = sugeno(float(input_attendance), float(input_grades))
+    #
+    # print(
+    #     '\nResults of Fuzzy Interference Systems:\n> According to Mamdani: {0}\n> According to Sugeno: {1}\nfrom '
+    #     'Inputs: ({2}, {3})'.format(
+    #         result_mamdani, result_sugeno, float(input_attendance), float(input_grades)))
