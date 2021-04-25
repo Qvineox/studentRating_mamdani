@@ -263,9 +263,10 @@ def build_semantic_graphs():
     return fig
 
 
-def input_evaluation(_input_attendance, _input_grades):
+def input_evaluation_mamdani(_input_attendance, _input_grades):
     a_membership = attendance_membership(_input_attendance)
     g_membership = grades_membership(_input_grades)
+    print('> Membership for input values are: \n{0}\n{1}'.format(a_membership, g_membership))
 
     all_memberships = a_membership + g_membership
 
@@ -332,6 +333,10 @@ def input_evaluation(_input_attendance, _input_grades):
     return power_rule['conclusion'], resulting_rule['result']
 
 
+def input_evaluation_sugeno(_input_attendance, _input_grades):
+    pass
+
+
 if __name__ == '__main__':
     plt = build_semantic_graphs()
     plt.show()
@@ -342,5 +347,5 @@ if __name__ == '__main__':
     print('Enter grades score (0-100):')
     input_grades = input()
 
-    conclusion_term, evaluated_score = input_evaluation(float(input_attendance), float(input_grades))
+    conclusion_term, evaluated_score = input_evaluation_mamdani(float(input_attendance), float(input_grades))
     crisp_conclusion(crisp_performance(conclusion_term, evaluated_score))
