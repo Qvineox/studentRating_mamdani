@@ -5,175 +5,200 @@
         "rare",
         "terrible"
       ],
-      "conclusion": "terrible"
+      "conclusion_mamdani": "terrible",
+      "conclusion_sugeno": "(x + y) / 2"
     },
     {
       "conditions": [
         "rare",
         "bad"
       ],
-      "conclusion": "terrible"
+      "conclusion_mamdani": "terrible",
+      "conclusion_sugeno": "y - 5"
     },
     {
       "conditions": [
         "rare",
         "average"
       ],
-      "conclusion": "poor"
+      "conclusion_mamdani": "poor",
+      "conclusion_sugeno": "(x + y) / 2 - 10"
     },
     {
       "conditions": [
         "rare",
         "good"
       ],
-      "conclusion": "mediocre"
+      "conclusion_mamdani": "mediocre",
+      "conclusion_sugeno": "y - 35"
     },
     {
       "conditions": [
         "rare",
         "excellent"
       ],
-      "conclusion": "mediocre"
+      "conclusion_mamdani": "mediocre",
+      "conclusion_sugeno": "30 + x"
     },
     {
       "conditions": [
         "inconsistent",
         "terrible"
       ],
-      "conclusion": "terrible"
+      "conclusion_mamdani": "terrible",
+      "conclusion_sugeno": "x - 15"
     },
     {
       "conditions": [
         "inconsistent",
         "bad"
       ],
-      "conclusion": "poor"
+      "conclusion_mamdani": "poor",
+      "conclusion_sugeno": "(x + y) / 2"
     },
     {
       "conditions": [
         "inconsistent",
         "average"
       ],
-      "conclusion": "poor"
+      "conclusion_mamdani": "poor",
+      "conclusion_sugeno": "(x + y) / 2 - 5"
     },
     {
       "conditions": [
         "inconsistent",
         "good"
       ],
-      "conclusion": "mediocre"
+      "conclusion_mamdani": "mediocre",
+      "conclusion_sugeno": "(x + y) / 2 + 5"
     },
     {
       "conditions": [
         "inconsistent",
         "excellent"
       ],
-      "conclusion": "normal"
+      "conclusion_mamdani": "normal",
+      "conclusion_sugeno": "40 + x"
     },
     {
       "conditions": [
         "usual",
         "terrible"
       ],
-      "conclusion": "terrible"
+      "conclusion_mamdani": "terrible",
+      "conclusion_sugeno": "x - 30"
     },
     {
       "conditions": [
         "usual",
         "bad"
       ],
-      "conclusion": "poor"
+      "conclusion_mamdani": "poor",
+      "conclusion_sugeno": "(x + y) / 2 - 5"
     },
     {
       "conditions": [
         "usual",
         "average"
       ],
-      "conclusion": "mediocre"
+      "conclusion_mamdani": "mediocre",
+      "conclusion_sugeno": "(x + y) / 2"
     },
     {
       "conditions": [
         "usual",
         "good"
       ],
-      "conclusion": "mediocre"
+      "conclusion_mamdani": "mediocre",
+      "conclusion_sugeno": "(x + y) / 2 + 5"
     },
     {
       "conditions": [
         "usual",
         "excellent"
       ],
-      "conclusion": "normal"
+      "conclusion_mamdani": "normal",
+      "conclusion_sugeno": "30 + x"
     },
     {
       "conditions": [
         "regular",
         "terrible"
       ],
-      "conclusion": "poor"
+      "conclusion_mamdani": "poor",
+      "conclusion_sugeno": "(x + y - 30) / 2"
     },
     {
       "conditions": [
         "regular",
         "bad"
       ],
-      "conclusion": "mediocre"
+      "conclusion_mamdani": "mediocre",
+      "conclusion_sugeno": "(x + y) / 2 - 10"
     },
     {
       "conditions": [
         "regular",
         "average"
       ],
-      "conclusion": "normal"
+      "conclusion_mamdani": "normal",
+      "conclusion_sugeno": "(x + y) / 2 + 5"
     },
     {
       "conditions": [
         "regular",
         "good"
       ],
-      "conclusion": "normal"
+      "conclusion_mamdani": "normal",
+      "conclusion_sugeno": "(x + y) / 2 + 10"
     },
     {
       "conditions": [
         "regular",
         "excellent"
       ],
-      "conclusion": "excellent"
+      "conclusion_mamdani": "excellent",
+      "conclusion_sugeno": "x + 5"
     },
     {
       "conditions": [
         "constant",
         "terrible"
       ],
-      "conclusion": "poor"
+      "conclusion_mamdani": "poor",
+      "conclusion_sugeno": "x - 70"
     },
     {
       "conditions": [
         "constant",
         "bad"
       ],
-      "conclusion": "mediocre"
+      "conclusion_mamdani": "mediocre",
+      "conclusion_sugeno": "(x + y) / 2 - 20"
     },
     {
       "conditions": [
         "constant",
         "average"
       ],
-      "conclusion": "normal"
+      "conclusion_mamdani": "normal",
+      "conclusion_sugeno": "(x + y) / 2 - 10"
     },
     {
       "conditions": [
         "constant",
         "good"
       ],
-      "conclusion": "excellent"
+      "conclusion_mamdani": "excellent",
+      "conclusion_sugeno": "(x + y) / 2 + 5"
     },
     {
       "conditions": [
         "constant",
         "excellent"
       ],
-      "conclusion": "excellent"
+      "conclusion_mamdani": "excellent",
+      "conclusion_sugeno": "(x + y) / 2"
     }
   ]
 }
