@@ -305,6 +305,7 @@ def sugeno(_input_attendance, _input_grades):
 
 
 def build_semantic_graphs():
+    print('Building semantic graphs...')
     fig = plt.figure()
     fig.set_figheight(5)
     fig.set_figwidth(10)
@@ -382,6 +383,7 @@ def build_semantic_graphs():
 
 
 def build_3d_graph():
+    print('Building 3-dimensional graphs...')
     _points = [[], [], [], []]
 
     for x in range(100):
@@ -411,6 +413,7 @@ def build_3d_graph():
 
 
 if __name__ == '__main__':
+    build_semantic_graphs()
     build_3d_graph()
 
     print('Enter attendance score (0-100):')
